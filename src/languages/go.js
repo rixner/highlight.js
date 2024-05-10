@@ -118,14 +118,53 @@ export default function(hljs) {
       { begin: /:=/ // relevance booster
       },
       {
-        className: 'function',
+        match: [
+          /type/,
+          /\s+/,
+          hljs.IDENT_RE
+        ],
+        scope: {
+          1: "keyword",
+          3: "title"
+        }
+      },
+      {
+        scope: 'function',
+        begin: [
+          /func/,
+          /\s+/,
+          /\([^\)"']*\)/,
+          /\s+/,
+          hljs.IDENT_RE,
+          /\s*\(/
+        ],
+        beginScope: {
+          1: "keyword",
+          3: "receiver",
+          5: "title",
+          6: "params"
+        },
+        end: '\\s*(\\{|$)',
+        excludeEnd: true,
+        contains: [
+          {
+            scope: 'params',
+            end: /\)/,
+            endsParent: true,
+            keywords: KEYWORDS,
+            illegal: /["']/
+          }
+        ]
+      },
+      {
+        scope: 'function',
         beginKeywords: 'func',
         end: '\\s*(\\{|$)',
         excludeEnd: true,
         contains: [
           hljs.TITLE_MODE,
           {
-            className: 'params',
+            scope: 'params',
             begin: /\(/,
             end: /\)/,
             endsParent: true,
